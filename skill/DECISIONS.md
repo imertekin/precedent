@@ -10,6 +10,28 @@ retroactively — this log picks up from the generalization point forward.
 
 ---
 
+## ADR-S9 — Claude Code doesn't read AGENTS.md natively; ask, don't auto-create
+- Status: Accepted (2026-08-04)
+- Importance: Major
+- Context: A live dry run (project-init run on a real dummy project) raised the question of
+  whether AGENTS.md is actually consumed by a coding agent the way this skill assumes. Research
+  confirmed Codex, Cursor, Windsurf, and Cline all read a repo's AGENTS.md natively, but Claude
+  Code does not — as of 2026 this is the single largest unresolved feature request on its issue
+  tracker (#6235, 5,200+ reactions, no roadmap commitment). Left unaddressed, this silently
+  breaks the skill's core premise ("planning agent and coding agent share AGENTS.md") for anyone
+  whose coding agent happens to be Claude Code. The officially documented fix is trivial: a
+  one-line `@AGENTS.md` import at the top of CLAUDE.md, which Claude Code loads at session start.
+- Decision: Rather than generating a CLAUDE.md bridge file by default for every project (dead
+  weight for the majority of coding agents that need no bridge at all), the skill now asks which
+  coding agent will consume AGENTS.md during document setup, and creates the one-line CLAUDE.md
+  import only when the answer is Claude Code.
+- Consequences: (+) No unnecessary files for Codex/Cursor/Windsurf/Cline users. (+) Closes a real
+  correctness gap for Claude Code users instead of silently assuming AGENTS.md gets read. (−) One
+  more clarifying question added to setup. (−) If the user switches coding agents mid-project,
+  the bridge file doesn't automatically appear or disappear — that's a manual follow-up.
+
+---
+
 ## ADR-S8 — Richer Decision Lifecycle, Draft triage, and a consolidated Session Start Checklist
 - Status: Accepted (2026-07-31)
 - Importance: Major

@@ -1,2 +1,6 @@
 .DS_Store
 *.log
+
+# Personal Turkish reference copies — not published
+README.tr.md
+article.tr.md

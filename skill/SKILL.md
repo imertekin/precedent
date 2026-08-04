@@ -67,6 +67,8 @@ Place the project according to the category structure agreed with the user.
 ### 4. Set up the document set
 Use the templates below. Fill in the fixed parts (decisions, backlog) with real content; leave the uncertain parts (tech spec, feasibility) as skeletons — they fill in once the blocker is resolved.
 
+Ask which coding agent will consume `AGENTS.md`, if it isn't already clear. Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` natively — no extra setup needed. Claude Code doesn't (as of 2026, this is Claude Code's single most-requested unmet feature on its issue tracker, still unresolved) — if the answer is Claude Code, also create the one-line `CLAUDE.md` bridge below. Don't create it by default for every project; it's dead weight for anyone not using Claude Code.
+
 ### 5. Apply the sequencing rule
 `feasibility/blocker → TECH_SPEC → code`. Don't move into architecture or code before the core uncertainty of the project is resolved. Mark this as "Phase 0" in the backlog.
 
@@ -245,6 +247,12 @@ Relationship: the PRD says "what," this document says "how." Decisions link back
 ## Status / blocker
 <current phase, and any open blocker>
 ```
+
+### CLAUDE.md (bridge — only if the coding agent is Claude Code)
+```
+@AGENTS.md
+```
+That single line makes Claude Code import and load `AGENTS.md` at session start (the officially documented method — see https://code.claude.com/docs/en/memory#agents-md). Claude-specific notes that shouldn't apply to other tools can go below the import line. Skip this file entirely for any other coding agent.
 
 ### DESIGN_BRIEF.md (if design work is involved)
 ```

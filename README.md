@@ -1,12 +1,20 @@
 # Precedent
 
+![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg) ![AGENTS.md](https://img.shields.io/badge/AGENTS.md-compatible-brightgreen.svg)
+
 **Precedent implements the Project Historian role** — a job most AI-assisted software projects are missing: an agent responsible for preserving decisions, remembering the project, managing its history, reviewing what's gone stale, and sustaining its own methodology, kept distinct from whichever agent actually writes the code.
 
 Concretely: a planning agent (e.g. Claude in Cowork) and a coding agent (e.g. Claude Code) share a small set of files, so decisions flow into code without getting lost — and don't have to be re-litigated every time someone asks "wait, why did we do it this way?"
 
 The name is a legal metaphor: a precedent is a past decision that binds and informs future ones without re-arguing the case from scratch. That's what a decision log is for.
 
-This repo ships two things: this document, and a working `skill/` you can install as-is — one implementation of the Project Historian role, not the only possible one. A Turkish translation of this README is in [`README.tr.md`](./README.tr.md).
+This repo ships two things: this document, and a working `skill/` you can install as-is — one implementation of the Project Historian role, not the only possible one.
+
+![The Precedent loop](./assets/flow-diagram.svg)
+
+## Contents
+
+[A disclaimer, first](#a-disclaimer-first) · [The problem](#the-problem) · [Precedent implements the Project Historian role](#precedent-implements-the-project-historian-role) · [Vocabulary](#vocabulary) · [How it works](#how-it-works) · [Core principles](#core-principles) · [Relationship to known practices](#relationship-to-known-practices) · [Known risks / open questions](#known-risks--open-questions) · [Usage](#usage) · [Sources](#sources)
 
 ## A disclaimer, first
 
@@ -100,6 +108,7 @@ In the interest of honesty, here's where each piece actually comes from.
 
 - **ADRs are commonly abandoned.** The literature is consistent: teams adopt them enthusiastically, then quietly stop within months. Reasons include maintenance burden falling on whoever has the least context, trivial decisions drowning out load-bearing ones until nobody trusts the log, and the record living outside the daily workflow. The one-way-gate design targets the record living outside the workflow; the Importance field targets trivial decisions drowning out load-bearing ones. The maintenance-burden-on-whoever-has-least-context problem is still open.
 - **Poisoning risk in the inbox.** A one-off, unimportant deviation getting promoted into a permanent decision record can teach the agent the wrong lesson persistently. Curation (the planning agent deciding what gets promoted) reduces this risk but doesn't eliminate it.
+- **AGENTS.md isn't read natively by every coding agent.** Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` directly. Claude Code doesn't (as of 2026, this is the single most-requested unmet feature on its issue tracker) — `project-init` asks which coding agent you're using and, only if it's Claude Code, creates a one-line `CLAUDE.md` that imports `AGENTS.md` (the officially documented workaround).
 - **Scale hasn't been tested.** This methodology was designed for a small number of projects with infrequent decisions. Where it breaks down at team/volume scale is an open question.
 
 ## Usage
