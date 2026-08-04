@@ -1,0 +1,74 @@
+<svg viewBox="0 0 960 560" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155"/>
+    </marker>
+    <marker id="arrowAmber" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="960" height="560" fill="#ffffff"/>
+
+  <!-- Title -->
+  <text x="480" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">The Precedent loop: one-way gate + feedback inbox</text>
+
+  <!-- Planning Agent box -->
+  <rect x="40" y="90" width="220" height="90" rx="10" fill="#eef2ff" stroke="#4338ca" stroke-width="2"/>
+  <text x="150" y="128" text-anchor="middle" font-size="16" font-weight="700" fill="#312e81">Planning Agent</text>
+  <text x="150" y="150" text-anchor="middle" font-size="13" fill="#4338ca">(e.g. Cowork)</text>
+
+  <!-- docs/ box -->
+  <rect x="370" y="70" width="220" height="130" rx="10" fill="#f8fafc" stroke="#334155" stroke-width="2"/>
+  <text x="480" y="98" text-anchor="middle" font-size="16" font-weight="700" fill="#0f172a">docs/</text>
+  <text x="480" y="120" text-anchor="middle" font-size="12" fill="#334155">PRD · TECH_SPEC</text>
+  <text x="480" y="138" text-anchor="middle" font-size="12" fill="#334155">DECISIONS.md</text>
+  <text x="480" y="156" text-anchor="middle" font-size="12" fill="#334155">BACKLOG.md</text>
+  <text x="480" y="180" text-anchor="middle" font-size="11" fill="#64748b">the single source of truth</text>
+
+  <!-- Gate diamond -->
+  <polygon points="700,95 760,135 700,175 640,135" fill="#dbeafe" stroke="#1d4ed8" stroke-width="2"/>
+  <text x="700" y="131" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">one-way</text>
+  <text x="700" y="146" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">gate</text>
+
+  <!-- Coding Agent box -->
+  <rect x="800" y="90" width="140" height="90" rx="10" fill="#ecfdf5" stroke="#047857" stroke-width="2"/>
+  <text x="870" y="128" text-anchor="middle" font-size="16" font-weight="700" fill="#065f46">Coding Agent</text>
+  <text x="870" y="150" text-anchor="middle" font-size="13" fill="#047857">(e.g. Claude Code)</text>
+
+  <!-- Arrow: Planning -> docs -->
+  <path d="M260,135 L365,135" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="312" y="122" text-anchor="middle" font-size="11" fill="#334155">writes decision</text>
+
+  <!-- Arrow: docs -> gate -->
+  <path d="M590,135 L636,135" stroke="#334155" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- Arrow: gate -> coding agent -->
+  <path d="M762,135 L796,135" stroke="#1d4ed8" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <text x="780" y="70" text-anchor="middle" font-size="11" fill="#1e3a8a">executable prompt —</text>
+  <text x="780" y="84" text-anchor="middle" font-size="11" fill="#1e3a8a">only if a decision exists</text>
+
+  <!-- DECISIONS_DRAFT.md inbox box -->
+  <rect x="740" y="300" width="200" height="80" rx="10" fill="#fffbeb" stroke="#b45309" stroke-width="2"/>
+  <text x="840" y="332" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">DECISIONS_DRAFT.md</text>
+  <text x="840" y="352" text-anchor="middle" font-size="12" fill="#92400e">(inbox — raw notes)</text>
+
+  <!-- Arrow: coding agent -> inbox -->
+  <path d="M870,180 L870,296" stroke="#b45309" stroke-width="2" fill="none" marker-end="url(#arrowAmber)"/>
+  <text x="960" y="240" text-anchor="end" font-size="11" fill="#92400e">drops a raw note on</text>
+  <text x="960" y="255" text-anchor="end" font-size="11" fill="#92400e">any deviation from the brief</text>
+
+  <!-- Arrow: inbox -> planning agent (curved, dashed) -->
+  <path d="M740,335 C 300,420 90,300 130,190" stroke="#b45309" stroke-width="2" fill="none" stroke-dasharray="6,5" marker-end="url(#arrowAmber)"/>
+  <text x="330" y="410" text-anchor="middle" font-size="11" fill="#92400e">read + curated into real ADRs</text>
+  <text x="330" y="425" text-anchor="middle" font-size="11" fill="#92400e">at the start of the next session</text>
+
+  <!-- Phase transition loop -->
+  <rect x="370" y="470" width="220" height="60" rx="10" fill="#f8fafc" stroke="#334155" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="480" y="495" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">BACKLOG phase transition</text>
+  <text x="480" y="514" text-anchor="middle" font-size="11" fill="#475569">(Phase 0 → 1 → 2)</text>
+
+  <path d="M480,470 L480,205" stroke="#64748b" stroke-width="1.5" fill="none" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+  <text x="500" y="440" font-size="11" fill="#475569">triggers a quick revalidation</text>
+  <text x="500" y="455" font-size="11" fill="#475569">of DECISIONS.md's assumptions</text>
+</svg>
