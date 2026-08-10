@@ -88,6 +88,15 @@ The command center **produces briefs**; the coding agent and (optionally) a desi
 
 The biggest efficiency lever: stop re-explaining context from scratch to downstream environments every time. Once a brief is written well, it gets reused.
 
+## Design requests: ask before deciding
+
+A design-related ask ("make the UI better," "let's apply a certain design model/framework") splits into two different jobs, and the command center shouldn't guess which one the user wants — ask, the same way scope gets clarified before documents get produced:
+
+- **A quick, throwaway mockup or visual direction check.** No prep needed — sketch it directly in chat (e.g. with Cowork's own visualization tools). Nothing here is a decision; it's a way to think out loud together.
+- **An actual design decision** — a color palette, a design system, a screen list meant to guide real implementation. This follows the same discipline as everything else: ask which design approach or model the user wants applied (if any), fill in `DESIGN_BRIEF.md`, then hand off a design prompt as chat output. Don't pick colors, styles, or components unprompted, and don't push straight into implementation — that's the same one-way-gate principle that already governs the coding handoff, applied to design.
+
+If it's unclear which of the two the user is actually asking for, ask before producing anything.
+
 ## Session Start Checklist
 
 Every session where the planning agent picks up work on an existing project runs this before any new planning happens:

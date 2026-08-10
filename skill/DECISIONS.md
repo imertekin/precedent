@@ -10,6 +10,30 @@ retroactively — this log picks up from the generalization point forward.
 
 ---
 
+## ADR-S10 — Design requests need the same "ask before deciding" discipline as code
+- Status: Accepted (2026-08-04)
+- Importance: Major
+- Context: A live dry run (Sonnet, not Opus, running project-init on a real project) surfaced an
+  asymmetry: the coding handoff has a well-specified protocol (gate, inbox, "deliver prompts as
+  chat output, not files"), but the design handoff was just a DESIGN_BRIEF.md template with no
+  equivalent rule. Asked to improve the UI with "various design model approaches" in mind, the
+  planning agent skipped straight to picking colors and a design system and pushed toward
+  implementation, instead of asking what the user actually wanted and producing a brief. This
+  looks like a real skill gap, not just a weaker model being less cautious — nothing in the skill
+  told any model to hold back here the way it's told to on the code side.
+- Decision: Added a "Design requests: ask before deciding" section. It splits design asks into
+  two kinds the command center must distinguish rather than assume: a throwaway mockup/visual
+  check (no prep, fine to sketch directly in chat) versus an actual design decision (follows the
+  same clarify-then-brief-then-handoff discipline as code, via DESIGN_BRIEF.md). If it's unclear
+  which the user wants, ask.
+- Consequences: (+) Closes the asymmetry between the coding and design handoffs — design
+  decisions now go through the same one-way gate as code decisions. (+) Quick mockups stay cheap
+  and don't require ceremony. (−) Adds one more judgment call the command center has to make
+  correctly (throwaway vs. real decision) rather than a hard rule; a model could still misjudge
+  which bucket a request falls into.
+
+---
+
 ## ADR-S9 — Claude Code doesn't read AGENTS.md natively; ask, don't auto-create
 - Status: Accepted (2026-08-04)
 - Importance: Major
