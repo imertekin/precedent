@@ -6,7 +6,7 @@ Three weeks into a project, I asked my own AI assistant why we'd picked a partic
 
 That's a small thing to lose. It's also exactly the kind of small thing that, multiplied across a few dozen decisions over a few months, turns a project into a place where nobody can explain why anything is the way it is. Everyone who's worked on a codebase for more than a year has felt this. What's new is that now an AI agent is making some of these calls too, in a chat window that disappears, at 2am, without asking anyone.
 
-So I built a small, deliberately unglamorous fix. It's called **Precedent**, and the core idea fits in one sentence: an AI agent doesn't get to hand off runnable work until the decision behind it is written down where the next session — human or agent — can find it.
+So I built a small, deliberately unglamorous fix. It's called [**Precedent**](https://github.com/imertekin/precedent), and the core idea fits in one sentence: an AI agent doesn't get to hand off runnable work until the decision behind it is written down where the next session — human or agent — can find it.
 
 The agent that talks to me, clarifies scope, and writes the brief isn't just planning anymore. It's acting as the project's historian.
 
@@ -107,4 +107,4 @@ That's a low bar. It's also one that most projects, AI-assisted or not, quietly 
 
 ---
 
-*Precedent is open source — the write-up, the installable skill (it's called `project-init`), and its own self-referential decision log are on GitHub.*
+*Precedent is open source — the write-up, the installable skill (it's called `project-init`), and its own self-referential decision log are on [GitHub](https://github.com/imertekin/precedent).*
