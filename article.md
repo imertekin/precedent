@@ -35,9 +35,11 @@ Every project gets a small set of files:
     DECISIONS.md             ← why (the decision log)
     DECISIONS_DRAFT.md       ← inbox for unprocessed notes
     BACKLOG.md               ← when, in what order
+  briefs/
+    DESIGN_BRIEF.md          ← only if design work is involved
 ```
 
-None of this is novel by itself. `DECISIONS.md` is an Architecture Decision Record, a format Michael Nygard wrote up in 2011 and that's been quietly standard in serious engineering orgs ever since. `AGENTS.md` is an actual open standard now — OpenAI, Google, Cursor, and Factory formalized it in 2025, and it's since been donated to the Linux Foundation. The PRD-then-spec-then-backlog ordering is close to what GitHub's own Spec-Kit recommends for AI-assisted development. I didn't invent any of these pieces. What I built is the specific way they connect.
+None of this is novel by itself. `DECISIONS.md` is an Architecture Decision Record, a format Michael Nygard wrote up in 2011 and that's been quietly standard in serious engineering orgs ever since. `AGENTS.md` is an actual open standard now — released by OpenAI in August 2025, quickly adopted by Cursor, Factory, Google's Jules, and most other major coding agents, and donated to the Linux Foundation's Agentic AI Foundation in December 2025. The PRD-then-spec-then-backlog ordering is close to what GitHub's own Spec-Kit recommends for AI-assisted development. I didn't invent any of these pieces. What I built is the specific way they connect.
 
 Each `DECISIONS.md` entry also carries more than the classic four fields. A status that moves through a real lifecycle — proposed, accepted, implemented, validated, or rejected, deprecated, superseded — instead of a flat yes/no. And an importance rating, so a decision to use a UUID instead of an auto-incrementing ID doesn't sit in the log with the same visual weight as a decision that turns the whole backend event-driven. That distinction sounds cosmetic until you're the one scrolling past forty entries trying to figure out which ten actually mattered.
 
@@ -49,11 +51,11 @@ Planning Agent → writes ADR → Coding Agent
       └──────── Draft (inbox) ───────┘
 ```
 
-**Part one is the gate.** The planning agent — the one that talks to me, clarifies scope, writes the brief — will not generate a runnable prompt for the coding agent until the relevant decision already exists in `docs/`. Not "should" write it down. Can't hand off work without it. This is architecture, not a rule someone has to remember to follow.
+**Part one is the gate.** The planning agent — the one that talks to me, clarifies scope, writes the brief — will not generate a runnable prompt for the coding agent until the relevant decision already exists in `docs/`. Not "should" write it down. Can't hand off work without it. I want to be precise about what "can't" means here, because it's the honest version of a claim I'd otherwise overstate: the gate is a standing instruction, enforced at the prompt level, so it's exactly as reliable as the agent reading and following its brief — same as everything else in this system. What separates it from a rule someone has to remember is *where it sits*: it's defined as a precondition of producing the handoff, not as a separate step on a checklist. There's no moment where anyone has to remember to check; a handoff without the record behind it is, by definition, not a finished handoff.
 
 **Part two is the part everyone gets wrong, including me the first time.** A one-way gate isn't enough. Code doesn't stay obedient to the plan — it can't, because the plan is always incomplete. A library doesn't do what you expected, a constraint shows up that nobody saw coming, and the agent implementing the feature makes a small, sensible call that never travels back to the document that's supposed to be the source of truth. Six months later that document is wrong, and worse, nobody knows it's wrong.
 
-So there's a second file, `DECISIONS_DRAFT.md`, that exists for exactly one purpose: catching those small, in-the-moment calls before they vanish. Not everything that lands there survives — some notes get read and explicitly declined, with the reason kept rather than the note just disappearing. Here's what that looks like in practice.
+So there's a second file, `DECISIONS_DRAFT.md`, that exists for exactly one purpose: catching those small, in-the-moment calls before they vanish. Not everything that lands there survives — triage has three outcomes, not two. A note either gets promoted to a full decision record, or gets declined with a one-line reason that stays in the log, or — if it's genuine noise — gets cleared without a trace. The middle outcome is the one that matters: a *declined* decision still leaves a record, but the log doesn't turn into a landfill of every passing remark either. Here's what that looks like in practice.
 
 ## A walk-through
 
@@ -105,4 +107,4 @@ That's a low bar. It's also one that most projects, AI-assisted or not, quietly 
 
 ---
 
-*Precedent is open source — the write-up, the skill you can install, and its own self-referential decision log are on GitHub.*
+*Precedent is open source — the write-up, the installable skill (it's called `project-init`), and its own self-referential decision log are on GitHub.*

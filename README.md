@@ -20,6 +20,8 @@ This repo ships two things: this document, and a working `skill/` you can instal
 
 Almost nothing here is new. Decision logs, spec-first workflows, context economy — all of these are established, named, in some cases formally standardized practices in software engineering. This repo doesn't claim to have invented them. The point is to honestly show how these known pieces compose in a two-agent (planner + executor) workflow — "here's how we combined it," not "here's what we discovered."
 
+One housekeeping note: this README is the canonical description of the methodology. The accompanying article is a snapshot from its publication date and may lag behind this document — where they differ, this file wins.
+
 This is also a generalized, English version of a personal, Turkish-language, company-specific skill one of us actually uses day to day. The working version has hardcoded categories and a fixed working language that only make sense for that specific setup; this version strips that out so it's usable as a template anywhere.
 
 ## The problem
@@ -37,7 +39,7 @@ The clearest way to describe what's actually different here: the planning agent 
 
 - **Preserves decisions.** `docs/DECISIONS.md`, in ADR format, with a lifecycle (Proposed → Accepted → Implemented → Validated, or Rejected / Deprecated / Superseded) instead of a flat "made or not."
 - **Remembers the project.** `AGENTS.md`, reloaded at the start of every session, keeping context economical rather than re-explained from scratch.
-- **Manages the history.** The `DECISIONS_DRAFT.md` inbox, triaged into Accepted / Rejected / Ignored rather than uniformly cleared — a declined note still leaves a trace instead of vanishing.
+- **Manages the history.** The `DECISIONS_DRAFT.md` inbox, triaged into Accepted / Rejected / Ignored rather than uniformly cleared — a declined note still leaves a trace instead of vanishing. (In practice this duty is shared: the coding agent writes the raw notes; the historian curates them. The role owns the *record*, not every keystroke into it.)
 - **Reviews.** The Session Start Checklist, which checks each ADR's own `Review trigger` (or, by default, the next backlog phase transition) rather than relying on a calendar or on someone remembering.
 - **Sustains the methodology.** `skill/DECISIONS.md` — the skill applies its own discipline to its own evolution.
 
@@ -76,7 +78,7 @@ Every project starts with this document set:
 
 This structure has no hardcoded root. `project-init` writes into whatever folder is connected to the agent at the time it's invoked, and it asks you to define your own category structure rather than assuming one (mobile/saas/whatever — that's yours to define, not baked in). In practice: connect your actual project workspace before running it, not this repo. If you run it while this repo itself is the connected folder, it'll try to create project folders inside Precedent — this repo is meant to stay a clean reference/template, not accumulate generated projects.
 
-The flow runs through a one-way gate: the planning agent doesn't hand the coding agent an executable prompt until the decision is written to `docs/` first. This structurally prevents a decision from leaking into code without ever passing through the record.
+The flow runs through a one-way gate: the planning agent doesn't hand the coding agent an executable prompt until the decision is written to `docs/` first. To be precise about the mechanism: the gate is a standing instruction, not enforced tooling — it's as reliable as the agent following its brief. What it changes is *where the rule sits*: writing the record is defined as a precondition of producing the handoff, not a separate step someone has to remember, so a decision can't leak into code without the handoff itself being incomplete.
 
 That one-way flow isn't enough on its own — there also needs to be a channel running back from execution to planning, or the docs quietly drift out of sync with reality. That's handled with a low-friction inbox: when the coding agent deviates from the brief during implementation, it drops a raw one-line note into `DECISIONS_DRAFT.md`. At the start of the next session, the planning agent triages each note into one of three outcomes — Accepted (promoted to a full ADR), Rejected (still recorded, with a one-line reason, instead of just disappearing), or Ignored (genuine noise, cleared without a trace).
 
@@ -99,7 +101,7 @@ In the interest of honesty, here's where each piece actually comes from.
 |---|---|---|
 | **Project Historian** (the role) | Orchestrator / supervisor agent pattern | Established in multi-agent frameworks (LangGraph's supervisor pattern, CrewAI's manager agent). The difference here is a concrete 5-duty spec implemented in plain files — no orchestration framework required, just two chat-based agents and a shared folder. |
 | `DECISIONS.md` | Architecture Decision Record (ADR) | Michael Nygard, 2011. The format (Context → Decision → Consequences → Status) is close to a direct translation of Nygard's original template. |
-| `AGENTS.md` | AGENTS.md | An open standard established in August 2025 by OpenAI, Google, Cursor, and Factory; donated to the Linux Foundation in December 2025. In use across 60,000+ projects. |
+| `AGENTS.md` | AGENTS.md | Released by OpenAI in August 2025; adopted early by Cursor, Factory, Google's Jules, and others; donated to the Linux Foundation's Agentic AI Foundation in December 2025. In use across 60,000+ projects. |
 | PRD → TECH_SPEC → BACKLOG ordering | Spec-Driven Development / GitHub Spec-Kit | GitHub's 2025–2026 toolkit recommends the same order: spec first, then plan, then tasks. |
 | Context economy | Context engineering | Anthropic's September 2025 engineering post: "find the smallest possible set of high-signal tokens." |
 | `DECISIONS_DRAFT.md` (inbox) | Structured note-taking / agentic memory | The same Anthropic post describes this pattern: an agent keeps a NOTES.md outside its context window, then reads it back later. |
@@ -108,7 +110,7 @@ In the interest of honesty, here's where each piece actually comes from.
 
 - **ADRs are commonly abandoned.** The literature is consistent: teams adopt them enthusiastically, then quietly stop within months. Reasons include maintenance burden falling on whoever has the least context, trivial decisions drowning out load-bearing ones until nobody trusts the log, and the record living outside the daily workflow. The one-way-gate design targets the record living outside the workflow; the Importance field targets trivial decisions drowning out load-bearing ones. The maintenance-burden-on-whoever-has-least-context problem is still open.
 - **Poisoning risk in the inbox.** A one-off, unimportant deviation getting promoted into a permanent decision record can teach the agent the wrong lesson persistently. Curation (the planning agent deciding what gets promoted) reduces this risk but doesn't eliminate it.
-- **AGENTS.md isn't read natively by every coding agent.** Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` directly. Claude Code doesn't (as of 2026, this is the single most-requested unmet feature on its issue tracker) — `project-init` asks which coding agent you're using and, only if it's Claude Code, creates a one-line `CLAUDE.md` that imports `AGENTS.md` (the officially documented workaround).
+- **AGENTS.md isn't read natively by every coding agent.** Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` directly. Claude Code doesn't (as of mid-2026; native support is one of the most-upvoted open requests on its issue tracker, and third-party reports on its status conflict — check the current docs) — `project-init` asks which coding agent you're using and, only if it's Claude Code, creates a one-line `CLAUDE.md` that imports `AGENTS.md` (the officially documented workaround). *Review trigger for this paragraph, per this repo's own rules: Claude Code's changelog announcing native `AGENTS.md` support — at which point the workaround gets removed.*
 - **Scale hasn't been tested.** This methodology was designed for a small number of projects with infrequent decisions. Where it breaks down at team/volume scale is an open question.
 
 ## Usage
