@@ -67,7 +67,14 @@ Place the project according to the category structure agreed with the user.
 ### 4. Set up the document set
 Use the templates below. Fill in the fixed parts (decisions, backlog) with real content; leave the uncertain parts (tech spec, feasibility) as skeletons — they fill in once the blocker is resolved.
 
-Ask which coding agent will consume `AGENTS.md`, if it isn't already clear. Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` natively — no extra setup needed. Claude Code doesn't (as of 2026, this is Claude Code's single most-requested unmet feature on its issue tracker, still unresolved) — if the answer is Claude Code, also create the one-line `CLAUDE.md` bridge below. Don't create it by default for every project; it's dead weight for anyone not using Claude Code.
+Ask which coding agent will consume `AGENTS.md`, if it isn't already clear. Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` natively — no extra setup needed. Claude Code reads it too since v2.1.277 (September 2026), but only as a fallback: it loads `AGENTS.md` when there's no `CLAUDE.md`, `.claude/CLAUDE.md`, or `CLAUDE.local.md` in the working directory or above it, and its docs note that some sessions can't read `AGENTS.md` at all.
+
+So don't create a `CLAUDE.md` by default — for Claude Code, `AGENTS.md` on its own is enough. Create the one-line bridge below only in these two cases:
+
+- The target project already has a `CLAUDE.md` or `CLAUDE.local.md`. That file suppresses the fallback, so without the import `AGENTS.md` would be silently skipped.
+- The user says they're working in a session where `AGENTS.md` support isn't available.
+
+Either way, tell the user in one line which path you took and why (e.g. "No `CLAUDE.md` created — Claude Code reads `AGENTS.md` directly since v2.1.277," or "Added a one-line `CLAUDE.md` importing `AGENTS.md`, because this project already has a `CLAUDE.md` that would otherwise suppress it").
 
 ### 5. Apply the sequencing rule
 `feasibility/blocker → TECH_SPEC → code`. Don't move into architecture or code before the core uncertainty of the project is resolved. Mark this as "Phase 0" in the backlog.
@@ -104,7 +111,8 @@ Every session where the planning agent picks up work on an existing project runs
 1. **Read ADR.** Read `docs/DECISIONS.md` to get current with what's already been decided and why.
 2. **Read Draft.** Check `docs/DECISIONS_DRAFT.md`. Triage anything in it — Accepted, Rejected, or Ignored (see the DECISIONS_DRAFT.md template below) — and clear processed entries.
 3. **Look for expired reviews.** For each ADR with a `Review trigger`, check it against what's true now (a stated metric, a shipped version). For ADRs with no explicit trigger, check whether `BACKLOG.md` just crossed a phase boundary — that's the default trigger. Flag anything whose assumptions may no longer hold.
-4. **Continue.** Proceed with whatever the user actually asked for this session.
+4. **Check that the brief still loads.** If the coding agent is Claude Code, check whether a `CLAUDE.md`, `.claude/CLAUDE.md`, or `CLAUDE.local.md` has appeared since setup. Any of them suppresses Claude Code's `AGENTS.md` fallback, so if one exists without an `@AGENTS.md` import, the project brief has silently stopped loading — add the import as its first line.
+5. **Continue.** Proceed with whatever the user actually asked for this session.
 
 This is a standing instruction, not a hard gate — it depends on the planning agent actually running it, the same way any instruction in AGENTS.md does. It's written here once so the project's own AGENTS.md can point to it with a single line instead of restating it.
 
@@ -244,6 +252,7 @@ Relationship: the PRD says "what," this document says "how." Decisions link back
 - If you deviate from the brief, drop a raw note in `docs/DECISIONS_DRAFT.md` (don't worry about ADR formatting, the command center processes it later).
 
 ## Working practice (command center ↔ coding agent)
+- This file is the single source of agent instructions. Claude Code only falls back to it when no `CLAUDE.md` / `.claude/CLAUDE.md` / `CLAUDE.local.md` exists — if one gets added later, put `@AGENTS.md` on its first line or this brief silently stops loading.
 - The command center reads/edits docs directly.
 - If the project folder is connected to Cowork, the command center can also run commands/tests inside the repo; if not (unmounted-path exception), that's left to the user or the coding agent.
 - Executable output (coding-agent or design prompts) isn't opened as files in the repo — it's delivered as chat output.
@@ -257,11 +266,11 @@ Relationship: the PRD says "what," this document says "how." Decisions link back
 <current phase, and any open blocker>
 ```
 
-### CLAUDE.md (bridge — only if the coding agent is Claude Code)
+### CLAUDE.md (bridge — only in the two cases in step 4)
 ```
 @AGENTS.md
 ```
-That single line makes Claude Code import and load `AGENTS.md` at session start (the officially documented method — see https://code.claude.com/docs/en/memory#agents-md). Claude-specific notes that shouldn't apply to other tools can go below the import line. Skip this file entirely for any other coding agent.
+That single line makes Claude Code import and load `AGENTS.md` at session start (the officially documented method — see https://code.claude.com/docs/en/memory#agents-md). Since v2.1.277 Claude Code falls back to `AGENTS.md` on its own, so this file isn't needed by default — create it only when a `CLAUDE.md`/`CLAUDE.local.md` already exists (which suppresses that fallback), or when the session can't read `AGENTS.md`. If a `CLAUDE.md` already exists, add the import as its first line rather than overwriting the file. Claude-specific notes that shouldn't apply to other tools can go below the import line. Skip this file entirely for any other coding agent.
 
 ### DESIGN_BRIEF.md (if design work is involved)
 ```

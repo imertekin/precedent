@@ -59,6 +59,8 @@ So there's a second file, `DECISIONS_DRAFT.md`, that exists for exactly one purp
 
 ## A walk-through
 
+*An illustrative scenario, simplified to show the mechanics.*
+
 **Session 1.** I ask the planning agent to set up a new project — a small internal tool for tracking something. We go back and forth on scope, it writes a PRD, and we log the first real decision: we're using a particular external API as the data source, even though it's rate-limited, because the volume is small enough that it won't matter. That goes into `DECISIONS.md` as ADR-001, with the reasoning attached.
 
 **Later that week.** The coding agent is implementing the integration and discovers the API's rate limit is enforced per-IP, not per-key — something nobody checked. It works around this with a small caching layer that wasn't in the spec. Instead of silently doing this and moving on, it drops one line into `DECISIONS_DRAFT.md`: *"2026-07-14 — API rate-limits by IP not key, added a 10-minute cache layer to stay under it."* No formatting, no ceremony. Just a note.
@@ -89,11 +91,19 @@ I'd rather undersell this than oversell it, so here's what I don't have confiden
 
 One thing before the specific risks: this system intentionally optimizes for explainability over speed. If your context rewards moving fast with less friction more than it rewards being able to explain a choice six months later, some of what follows will read as overhead, not safety.
 
-**Decision logs get abandoned. This is extremely well documented, not a hypothetical.** Teams adopt ADRs enthusiastically and quietly stop maintaining them within months, consistently enough that it's a known pattern in the literature, not an edge case. The reasons are things like: the maintenance burden lands on whoever has the least context, or trivial decisions pile up next to load-bearing ones until nobody trusts the log anymore. The one-way gate targets the record living outside the actual workflow; the importance rating on every entry targets trivial decisions drowning out load-bearing ones. The maintenance burden landing on whoever has the least context — that one I still don't have a good answer for.
+**Decision logs get abandoned.** Practitioners report this often enough that it's hard to treat as an edge case: teams adopt ADRs enthusiastically and quietly stop maintaining them within months. To be fair about the evidence, it's mostly practitioner experience; the academic work on how ADRs actually fare in practice is still thin ([an ECSA 2024 action research study](https://doi.org/10.1007/978-3-031-70797-1_22) makes exactly that point). The commonly cited reasons are things like: the maintenance burden lands on whoever has the least context, or trivial decisions pile up next to load-bearing ones until nobody trusts the log anymore. The one-way gate targets the record living outside the actual workflow; the importance rating on every entry targets trivial decisions drowning out load-bearing ones. The maintenance burden landing on whoever has the least context — that one I still don't have a good answer for.
 
 **The inbox can be poisoned.** If a one-off, unimportant deviation gets promoted into a permanent decision, the agent learns the wrong lesson and keeps re-learning it. Curation helps — a human or the planning agent deciding what's actually worth keeping — but it's a mitigation, not a guarantee.
 
 **I haven't tested this past small scale.** This is built for a handful of projects with infrequent, deliberate decisions. I genuinely don't know where it breaks if you throw a large team or a high-velocity, many-small-decisions environment at it. My guess is it breaks somewhere, and an automatic memory system takes over from there — but that's a guess, not something I've verified.
+
+## Since I first wrote this
+
+Two things happened after the first draft, and both belong in the record.
+
+**A review trigger fired.** The README had a paragraph saying Claude Code doesn't read `AGENTS.md` natively, so `project-init` created a one-line `CLAUDE.md` that imports it. That paragraph carried its own review trigger: Claude Code shipping native support. In September 2026 it did, in v2.1.277, as a fallback that applies when no `CLAUDE.md` exists. Nobody had to remember to check; the condition was written right next to the claim. The paragraph and the skill were updated, and the change has its own entry in the skill's decision log. That's the review mechanism doing what it's for, on the tool itself.
+
+**I started measuring it.** Everything above is a practice, not a result. I'm now building a small coding agent from scratch to test these ideas on something that actually runs, and the first interim note is out: [Measure, don't assume](https://imertekin.com/writing/measure-dont-assume/). Two of its findings land directly on this article. A decision I had written down wasn't enforced anywhere in the code, which is why the decision table in that project now has a "where is this decision enforced?" column. And a lesson I had recorded wasn't retrieved when it was needed. That gave me a sharper way to say what "routing" means: a decision has to be *stored*, then *retrieved* at the right moment, then *applied*, and each of those gates can fail on its own. Precedent handles the first gate well. The other two are what the experiment is for.
 
 ## Take the piece that's missing, skip the rest
 

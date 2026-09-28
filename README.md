@@ -22,7 +22,7 @@ Almost nothing here is new. Decision logs, spec-first workflows, context economy
 
 One housekeeping note: this README is the canonical description of the methodology. The accompanying article is a snapshot from its publication date and may lag behind this document — where they differ, this file wins.
 
-This is also a generalized, English version of a personal, Turkish-language, company-specific skill one of us actually uses day to day. The working version has hardcoded categories and a fixed working language that only make sense for that specific setup; this version strips that out so it's usable as a template anywhere.
+This is also a generalized, English version of a personal, Turkish-language skill I actually use day to day. The working version has hardcoded categories and a fixed working language that only make sense for that specific setup; this version strips that out so it's usable as a template anywhere.
 
 ## The problem
 
@@ -112,9 +112,9 @@ In the interest of honesty, here's where each piece actually comes from.
 
 ## Known risks / open questions
 
-- **ADRs are commonly abandoned.** The literature is consistent: teams adopt them enthusiastically, then quietly stop within months. Reasons include maintenance burden falling on whoever has the least context, trivial decisions drowning out load-bearing ones until nobody trusts the log, and the record living outside the daily workflow. The one-way-gate design targets the record living outside the workflow; the Importance field targets trivial decisions drowning out load-bearing ones. The maintenance-burden-on-whoever-has-least-context problem is still open.
+- **ADRs are commonly abandoned.** Practitioners report this often: teams adopt them enthusiastically, then quietly stop within months. Empirical evidence on how ADRs actually fare in practice is still limited (see the ECSA 2024 action research study in Sources), so treat this as a widely reported pattern rather than a settled finding. Commonly cited reasons include maintenance burden falling on whoever has the least context, trivial decisions drowning out load-bearing ones until nobody trusts the log, and the record living outside the daily workflow. The one-way-gate design targets the record living outside the workflow; the Importance field targets trivial decisions drowning out load-bearing ones. The maintenance-burden-on-whoever-has-least-context problem is still open.
 - **Poisoning risk in the inbox.** A one-off, unimportant deviation getting promoted into a permanent decision record can teach the agent the wrong lesson persistently. Curation (the planning agent deciding what gets promoted) reduces this risk but doesn't eliminate it.
-- **AGENTS.md isn't read natively by every coding agent.** Codex, Cursor, Windsurf, and Cline all read a repo's `AGENTS.md` directly. Claude Code doesn't (as of mid-2026; native support is one of the most-upvoted open requests on its issue tracker, and third-party reports on its status conflict — check the current docs) — `project-init` asks which coding agent you're using and, only if it's Claude Code, creates a one-line `CLAUDE.md` that imports `AGENTS.md` (the officially documented workaround). *Review trigger for this paragraph, per this repo's own rules: Claude Code's changelog announcing native `AGENTS.md` support — at which point the workaround gets removed.*
+- **`AGENTS.md` support in Claude Code is a fallback, not a guarantee.** Codex, Cursor, Windsurf, and Cline read a repo's `AGENTS.md` directly. Since v2.1.277 (September 2026), Claude Code does too, but only as a fallback: it reads `AGENTS.md` when there is no `CLAUDE.md` or `CLAUDE.local.md` in the working directory or above it, and the official docs note that in some sessions it can't read `AGENTS.md` at all and recommend importing it from a `CLAUDE.md` there. So the one-line `CLAUDE.md` that imports `AGENTS.md` is no longer required by default, but it's still the safe choice if a `CLAUDE.md` already exists or you work in one of those sessions. *This paragraph's review trigger (Claude Code shipping native `AGENTS.md` support) fired in September 2026; the corresponding change to `project-init` is recorded in `skill/DECISIONS.md`.*
 - **Scale hasn't been tested.** This methodology was designed for a small number of projects with infrequent decisions. Where it breaks down at team/volume scale is an open question.
 
 ## Usage
@@ -123,9 +123,13 @@ In the interest of honesty, here's where each piece actually comes from.
 
 ## Sources
 
-- Michael Nygard, "Documenting Architecture Decisions" (2011) — https://adr.github.io/
+- Michael Nygard, "Documenting Architecture Decisions" (2011) — https://www.cognitect.com/blog/2011/11/15/documenting-architecture-decisions (see also https://adr.github.io/)
 - AGENTS.md — https://agents.md/
 - GitHub Spec-Kit — https://github.com/github/spec-kit
 - Anthropic, "Effective context engineering for AI agents" (2025) — https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
 - Anthropic, "Claude Code best practices" — https://www.anthropic.com/engineering/claude-code-best-practices
+- "Architecture Decision Records in Practice: An Action Research Study", ECSA 2024 — https://doi.org/10.1007/978-3-031-70797-1_22
+- Vercel AI SDK, `adr-skill` — https://github.com/vercel/ai/blob/main/skills/adr-skill/SKILL.md
+- Agent Decision Records (AgDR) — https://github.com/me2resh/agent-decision-record
+- Claude Code docs, "How Claude remembers your project" (AGENTS.md section) — https://code.claude.com/docs/en/memory#agents-md
 - "The reason most ADRs get written and never read" — https://www.javacodegeeks.com/2026/05/the-reason-most-architecture-decision-records-get-written-and-never-read-is-architectural-not-cultural.html

@@ -10,6 +10,36 @@ retroactively — this log picks up from the generalization point forward.
 
 ---
 
+## ADR-S11 — Made the CLAUDE.md import optional now that Claude Code reads AGENTS.md
+- Status: Accepted (2026-09-28)
+- Importance: Major
+- Supersedes: ADR-S9
+- Context: project-init created a one-line CLAUDE.md importing AGENTS.md whenever the user's
+  coding agent was Claude Code, because Claude Code didn't read AGENTS.md at all (ADR-S9). The
+  README paragraph describing that workaround carried an explicit review trigger: native
+  AGENTS.md support appearing in Claude Code's changelog. That trigger fired. Since v2.1.277
+  (September 2026) Claude Code does read AGENTS.md — but only as a fallback, and only when there
+  is no CLAUDE.md, .claude/CLAUDE.md, or CLAUDE.local.md in the working directory or above it.
+  The docs also note that some session types can't read AGENTS.md at all and recommend importing
+  it from a CLAUDE.md there. Source: https://code.claude.com/docs/en/memory#agents-md
+- Decision: By default project-init no longer creates CLAUDE.md — for Claude Code, AGENTS.md on
+  its own is enough. It still creates the one-line `@AGENTS.md` import in two cases: the project
+  already has a CLAUDE.md or CLAUDE.local.md (which would otherwise suppress the fallback and
+  silently skip AGENTS.md), or the user says they work in a session without AGENTS.md support.
+  Either way it tells the user in one line which path it took and why.
+- Consequences: (+) Fewer generated files, and one source of truth for agent instructions instead
+  of a bridge file to keep in sync. (+) The skill now matches how Claude Code actually behaves
+  rather than a workaround for behavior that no longer exists. (−) The fallback is conditional, so
+  someone adding a CLAUDE.md later for unrelated reasons (personal notes, a tool's scaffolding)
+  silently stops AGENTS.md from loading — mitigated by a line about this in the generated
+  AGENTS.md and a check added to the Session Start Checklist, neither of which is a hard gate.
+  (−) The "which coding agent are you using?" question from ADR-S9 still has to be asked, so setup
+  isn't any shorter — only the output is.
+- Review trigger: Claude Code changing the default "Project instructions" setting (currently
+  `claude-md-or-agents-md`), or AGENTS.md support becoming available in all session types.
+
+---
+
 ## ADR-S10 — Design requests need the same "ask before deciding" discipline as code
 - Status: Accepted (2026-08-04)
 - Importance: Major
@@ -35,7 +65,7 @@ retroactively — this log picks up from the generalization point forward.
 ---
 
 ## ADR-S9 — Claude Code doesn't read AGENTS.md natively; ask, don't auto-create
-- Status: Accepted (2026-08-04)
+- Status: Superseded by ADR-S11 (2026-09-28) — was Accepted (2026-08-04)
 - Importance: Major
 - Context: A live dry run (project-init run on a real dummy project) raised the question of
   whether AGENTS.md is actually consumed by a coding agent the way this skill assumes. Research
